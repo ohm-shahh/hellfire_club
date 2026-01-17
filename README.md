@@ -1,4 +1,4 @@
-# 🌆 Hellfire Club - Smart City Intelligence Platform
+# 🌆 Urban Nexus - Smart City Intelligence Platform
 
 <div align="center">
 
