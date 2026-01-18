@@ -9,7 +9,7 @@ def init_pool():
     if _pool is None:
         _pool = pooling.MySQLConnectionPool(
             pool_name="smartcity_pool",
-            pool_size=5,
+            pool_size=20,
             host=DB_HOST,
             port=DB_PORT,
             user=DB_USER,
@@ -62,10 +62,28 @@ def init_db():
     ) ENGINE=InnoDB;
     """)
 
-    # # Indexes
-    # cur.execute("CREATE INDEX IF NOT EXISTS idx_events_ts ON events(ts);")
-    # cur.execute("CREATE INDEX IF NOT EXISTS idx_metrics_ts ON metrics(ts);")
-    # cur.execute("CREATE INDEX IF NOT EXISTS idx_metrics_zone_metric_ts ON metrics(zone_id, metric_name, ts);")
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at BIGINT NOT NULL,
+    role VARCHAR(20) DEFAULT 'user'
+    ) ENGINE=InnoDB;
+    """)
+
+    # Indexes
+    try:
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_events_ts ON events(ts);")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_events_zone_source_ts ON events(zone_id, source_type, ts);")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_metrics_ts ON metrics(ts);")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_metrics_zone_metric_ts ON metrics(zone_id, metric_name, ts);")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_scenarios_ts ON scenarios(ts);")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_scenarios_name_ts ON scenarios(scenario_name, ts);")
+    except Exception as e:
+        # Indexes might already exist
+        pass
 
     conn.commit()
     cur.close()
