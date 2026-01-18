@@ -356,6 +356,24 @@ Some routes require authentication (marked with `@require_auth` decorator). Most
 
 ---
 
+## 📸 ScreenShot
+
+<img width="2938" height="1320" alt="image" src="https://github.com/user-attachments/assets/09e9aa34-6aa1-44e6-8f06-65e7d2074746" />
+<img width="2938" height="1680" alt="image" src="https://github.com/user-attachments/assets/95a69b9e-0b0b-43f3-ab61-870a7241b8a7" />
+<img width="2938" height="1414" alt="image" src="https://github.com/user-attachments/assets/e513bb7d-f23f-4505-be51-3d8dbf05adb8" />
+<img width="2788" height="914" alt="image" src="https://github.com/user-attachments/assets/6dca4dbb-4cad-4243-995c-5922828d0880" />
+<img width="2938" height="1572" alt="image" src="https://github.com/user-attachments/assets/86e5cfa0-1124-4d34-bd97-92dbdb128d08" />
+<img width="2826" height="1250" alt="image" src="https://github.com/user-attachments/assets/1c53853e-303b-4a3a-8adb-1929b7ca7ea8" />
+<img width="2938" height="1284" alt="image" src="https://github.com/user-attachments/assets/80ed94d1-6b54-4dcf-93a6-e065eb5e6bb2" />
+<img width="2938" height="1322" alt="image" src="https://github.com/user-attachments/assets/d4c335b2-10da-46ad-9e88-36c36c1002c0" />
+<img width="2938" height="1346" alt="image" src="https://github.com/user-attachments/assets/33e42620-2461-4ba6-9e8f-af580d5511f5" />
+
+
+
+
+
+
+
 ## 📝 License
 
 MIT License - See LICENSE file for details.
