@@ -13,6 +13,40 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
 
+def _normalize_payload(payload):
+    """
+    payload_json from mysql may come as:
+    - dict (already parsed)
+    - str (JSON string)
+    - bytes/bytearray (JSON bytes)
+    """
+    if payload is None:
+        return {}
+
+    # if it is already a dict
+    if isinstance(payload, dict):
+        return payload
+
+    # if it comes as bytes
+    if isinstance(payload, (bytes, bytearray)):
+        try:
+            payload = payload.decode("utf-8")
+        except Exception:
+            payload = payload.decode(errors="ignore")
+
+    # if it comes as str JSON
+    if isinstance(payload, str):
+        payload = payload.strip()
+        if payload == "":
+            return {}
+        try:
+            return json.loads(payload)
+        except json.JSONDecodeError:
+            return {}
+
+    return {}
+
+
 class CorrelationEngine:
     """Analyzes cross-domain correlations and causal relationships"""
     
@@ -49,10 +83,9 @@ class CorrelationEngine:
                 zone_id = row['zone_id']
                 source_type = row['source_type']
                 ts = int(row['ts'])
-                payload = row['payload_json']
                 
-                if isinstance(payload, str):
-                    payload = json.loads(payload)
+                # Use normalize helper to handle all payload formats
+                payload = _normalize_payload(row['payload_json'])
                 
                 # Extract domain-specific metrics
                 point = {'ts': ts, 'zone_id': zone_id}

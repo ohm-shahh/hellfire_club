@@ -49,7 +49,7 @@ export const CityProvider = ({ children }) => {
       } catch (err) {
         console.error('Failed to load dashboard data:', err);
         if (isInitial) {
-          setError('Failed to load dashboard data. Make sure the API server is running at http://localhost:5000');
+          setError('Failed to load dashboard data. Make sure the API server is running at http://localhost:2000');
         }
       } finally {
         if (isInitial) {

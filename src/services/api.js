@@ -1,9 +1,9 @@
 /**
  * Smart City Dashboard API Service
- * Handles all API calls to the Flask backend (port 5000)
+ * Handles all API calls to the Flask backend (port 2700)
  */
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'http://localhost:2700';
 
 // Helper function to get auth token from localStorage
 const getAuthToken = () => {
@@ -149,6 +149,27 @@ export const fetchZones = async () => {
 };
 
 // ====================
+// Health APIs
+// ====================
+export const fetchHealthData = async () => {
+  return apiCall('/api/health/data');
+};
+
+// ====================
+// Traffic APIs
+// ====================
+export const fetchTrafficData = async () => {
+  return apiCall('/api/traffic/data');
+};
+
+// ====================
+// Agriculture APIs
+// ====================
+export const fetchAgricultureData = async () => {
+  return apiCall('/api/agriculture/data');
+};
+
+// ====================
 // Correlation APIs
 // ====================
 export const fetchCorrelationMatrix = async (zoneId = null) => {
@@ -210,8 +231,15 @@ export const runScenario = async (scenarioName, params = {}, targetZones = null)
 // Legacy compatibility (for existing components)
 // ====================
 export const fetchDashboardData = async () => {
-  // Map to realtime dashboard
-  const data = await fetchRealtimeDashboard();
+  // Fetch all data in parallel
+  const [dashboardResult, healthResult, trafficResult, agricultureResult] = await Promise.all([
+    fetchRealtimeDashboard().catch(err => ({ status: 'error', error: err.message })),
+    fetchHealthData().catch(err => null),
+    fetchTrafficData().catch(err => null),
+    fetchAgricultureData().catch(err => null)
+  ]);
+
+  const data = dashboardResult;
   
   // Handle "no_metrics_yet" case
   if (data.status === "no_metrics_yet") {
@@ -227,7 +255,10 @@ export const fetchDashboardData = async () => {
       system_health: {
         dataPipeline: { status: 'Waiting for data', color: 'yellow' }
       },
-      correlation_alerts: []
+      correlation_alerts: [],
+      health: null,
+      traffic: null,
+      agriculture: null
     };
   }
   
@@ -265,7 +296,13 @@ export const fetchDashboardData = async () => {
         color: 'green'
       }
     },
-    correlation_alerts: data.correlation_alerts || []
+    correlation_alerts: data.correlation_alerts || [],
+    // Add health, traffic, and agriculture data
+    health: healthResult,
+    traffic: trafficResult,
+    agriculture: agricultureResult,
+    zones: data.zones || [],
+    city: data.city || {}
   };
 };
 
